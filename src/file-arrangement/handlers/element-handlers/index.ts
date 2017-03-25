@@ -1,2 +1,2 @@
-export * from './element-handler-base';
+export * from './element-handler.interface';
 export * from './implementation';

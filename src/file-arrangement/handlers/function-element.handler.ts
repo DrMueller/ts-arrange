@@ -1,19 +1,48 @@
 import { Element, ElementCollection } from '../models';
 import { Constants } from '../infrastructure';
 import { IStringConstructor } from '../interfaces';
+import { StringHelper } from '../helpers';
+import { ElementHeadingHandler } from '.';
 
 export class FunctionElementHandler {
   constructor(private documentText: string) {
   }
 
+  public getFunctionElementsWithExclusions(searchString: string, ctor: IStringConstructor<Element>, excludedStrings: string[]): Element[] {
+    const result = new Array<Element>();
+    let pos = StringHelper.indexOfCaseInsensitive(this.documentText, searchString, 0);
+    while (pos > -1) {
+      const element = this.createFunctionElement(pos, ctor);
+
+      if (!this.checkIfElementHeadingContainsString(element, excludedStrings)) {
+        result.push(element);
+      }
+
+      const posAfterText = pos + element.text.length;
+      pos = StringHelper.indexOfCaseInsensitive(this.documentText, searchString, posAfterText);
+    }
+
+    return result;
+  }
+
+  private checkIfElementHeadingContainsString(element: Element, strings: string[]): boolean {
+    const heading = ElementHeadingHandler.getHeadingWithoutParameters(element);
+    const result = strings.some(f => {
+      return StringHelper.indexOfCaseInsensitive(heading, f, 0) > -1;
+    });
+
+    return result;
+  }
+
   public getFunctionElements(searchString: string, ctor: IStringConstructor<Element>): Element[] {
     const result = new Array<Element>();
-    let pos = this.documentText.indexOf(searchString, 0);
+    let pos = StringHelper.indexOfCaseInsensitive(this.documentText, searchString, 0);
 
     while (pos > -1) {
       const functionElement = this.createFunctionElement(pos, ctor);
       result.push(functionElement);
-      pos = this.documentText.indexOf(searchString, pos + functionElement.text.length);
+      const posAfterText = pos + functionElement.text.length;
+      pos = StringHelper.indexOfCaseInsensitive(this.documentText, searchString, posAfterText);
     }
 
     return result;

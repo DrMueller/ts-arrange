@@ -1,16 +1,17 @@
-import { ElementHandlerBase } from '..';
-import { FunctionElementHandler } from '../..';
-import { FunctionHelper } from '../../../helpers';
-import { Element, ElementCollection } from '../../../models';
+import { IElementHandler } from '../..';
+import { FunctionElementHandler, ElementHeadingHandler } from '../../..';
+import { Element, ElementCollection, ElementModifier } from '../../../../models';
 
-export class PublicPropertyElementHandler extends ElementHandlerBase {
+export abstract class PropertyElementHandlerBase {
   public get handledElementName(): string {
-    return 'Public Property';
+    return `${this.modifier} Property`;
+  }
+
+  constructor(private modifier: ElementModifier) {
   }
 
   public getElements(text: string): ElementCollection {
     const propertyElements = this.geSortedPropertyElements(text);
-
     return new ElementCollection(1, this.handledElementName, propertyElements);
   }
 
@@ -38,8 +39,8 @@ export class PublicPropertyElementHandler extends ElementHandlerBase {
 
   private geSortedPropertyElements(text: string): Element[] {
     const functionElementHandler = new FunctionElementHandler(text);
-    let getElements = functionElementHandler.getFunctionElements('public get ', Element);
-    let setElements = functionElementHandler.getFunctionElements('public set ', Element);
+    let getElements = functionElementHandler.getFunctionElements(`${ElementModifier[this.modifier]} get `, Element);
+    let setElements = functionElementHandler.getFunctionElements(`${ElementModifier[this.modifier]} set `, Element);
 
     getElements = this.sortElementsByName(getElements);
     setElements = this.sortElementsByName(setElements);
@@ -48,7 +49,7 @@ export class PublicPropertyElementHandler extends ElementHandlerBase {
     const concatedElements = getElements.concat(setElements);
     const result = this.sortbySequence(concatedElements);
 
-    return concatedElements;
+    return result;
   }
 
   private sortbySequence(elements: Element[]): Element[] {
@@ -87,11 +88,11 @@ export class PublicPropertyElementHandler extends ElementHandlerBase {
   }
 
   private getCorrespondingSetElement(element: Element, elements: Element[]): Element | undefined {
-    const propertyName = FunctionHelper.getFunctionNameWithoutParameters(element.text);
+    const propertyName = ElementHeadingHandler.getHeadingWithoutParameters(element);
     const propertyNameToSearch = propertyName.replace(' get ', ' set ');
 
     const opposingProperty = elements.find(f => {
-      const propName = FunctionHelper.getFunctionNameWithoutParameters(f.text);
+      const propName = ElementHeadingHandler.getHeadingWithoutParameters(f);
       return propName === propertyNameToSearch;
     });
 

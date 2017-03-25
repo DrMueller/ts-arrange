@@ -1,9 +1,8 @@
-import { ElementHandlerBase } from '..';
+import { IElementHandler } from '..';
 import { FunctionElementHandler } from '../..';
-import { FunctionHelper } from '../../../helpers';
 import { Element, ElementCollection } from '../../../models';
 
-export class ConstructorElementHandler extends ElementHandlerBase {
+export class ConstructorElementHandler implements IElementHandler {
   public get handledElementName(): string {
     return 'Constructor';
   }

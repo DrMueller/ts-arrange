@@ -2,7 +2,13 @@ import { Element, ElementCollection } from './models';
 import { Constants } from './infrastructure';
 
 import { TextBuilder } from './handlers';
-import { ConstructorElementHandler, PublicFunctionElementHandler, PublicPropertyElementHandler } from './handlers/element-handlers';
+import {
+  ConstructorElementHandler,
+  PublicFunctionElementHandler,
+  PublicPropertyElementHandler,
+  PublicFieldElementHandler,
+  PrivateFieldElementHandler
+} from './handlers/element-handlers';
 
 import * as _ from 'lodash';
 
@@ -19,16 +25,24 @@ export class FileArrangementService {
     const tra3 = new PublicPropertyElementHandler();
     const pubProp = tra3.getElements(text);
 
+    const tra4 = new PublicFieldElementHandler();
+    const pubFields = tra4.getElements(text);
+
+    const tra5 = new PrivateFieldElementHandler();
+    const privFields = tra5.getElements(text);
+
     const result = new TextBuilder()
       .appendText(classHeadingText)
-      .appendElements(ctorElements)
-      .appendElements(pubProp)
-      .appendElements(pubFuncElements)
+      .appendElements(privFields, false)
+      .appendElements(ctorElements, true)
+      .appendElements(pubFuncElements, true)
+      .appendElements(pubProp, true)
+      .appendElements(pubFields, false)
       .appendText(Constants.CLOSING_BRACKET)
       .appendEmptyLine()
       .build();
 
-    return text;
+    return result;
   }
 
   private getClassHeading(str: string): string {
