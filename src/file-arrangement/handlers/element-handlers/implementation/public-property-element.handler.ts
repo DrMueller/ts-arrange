@@ -86,7 +86,7 @@ export class PublicPropertyElementHandler extends ElementHandlerBase {
     });
   }
 
-  private getCorrespondingSetElement(element: Element, elements: Element[]): Element | null {
+  private getCorrespondingSetElement(element: Element, elements: Element[]): Element | undefined {
     const propertyName = FunctionHelper.getFunctionNameWithoutParameters(element.text);
     const propertyNameToSearch = propertyName.replace(' get ', ' set ');
 

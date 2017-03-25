@@ -6,8 +6,9 @@ export class FileArrangementModule {
     const text = TextEditorHelper.getDocumentText();
     const service = new FileArrangementService();
 
-    const arrangedText = service.arrangeWithinClass(text);
-
-    TextEditorHelper.overwriteDocumentText(arrangedText);
+    if (text) {
+      const arrangedText = service.arrangeWithinClass(text);
+      TextEditorHelper.overwriteDocumentText(arrangedText);
+    }
   }
 }

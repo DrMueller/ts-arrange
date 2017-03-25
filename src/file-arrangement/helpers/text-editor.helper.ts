@@ -14,7 +14,7 @@ export class TextEditorHelper {
   public static overwriteDocumentText(documentText: string): void {
     const textEditor = vscode.window.activeTextEditor;
     if (!textEditor) {
-      return null;
+      return;
     }
 
     textEditor.edit(f => {
