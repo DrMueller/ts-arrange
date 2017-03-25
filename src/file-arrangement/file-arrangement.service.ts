@@ -1,27 +1,25 @@
-import { TextElement } from '../models';
-import { Constants } from '../infrastucture';
-import { TextBuilder } from '.';
+import { Element, ElementCollection } from './models';
+import { Constants } from './infrastructure';
 
-import { ConstructorElementHandler, PublicFunctionElementHandler, PublicPropertyElementHandler } from '../element-handlers';
-import { ConstructorElement } from '../elements';
-
+import { TextBuilder } from './handlers';
+import { ConstructorElementHandler, PublicFunctionElementHandler, PublicPropertyElementHandler } from './handlers/element-handlers';
 
 import * as _ from 'lodash';
 
-export class ClassArrangementHandler {
-  public arrangeWithinClass(str: string): string {
-    const classHeadingText = this.getClassHeading(str);
+export class FileArrangementService {
+  public arrangeWithinClass(text: string): string {
+    const classHeadingText = this.getClassHeading(text);
 
     const tra = new ConstructorElementHandler();
-    const ctorElements = tra.getElements(str);
+    const ctorElements = tra.getElements(text);
 
     const tra2 = new PublicFunctionElementHandler();
-    const pubFuncElements = tra2.getElements(str);
+    const pubFuncElements = tra2.getElements(text);
 
     const tra3 = new PublicPropertyElementHandler();
-    const pubProp = tra3.getElements(str);
+    const pubProp = tra3.getElements(text);
 
-    const text = new TextBuilder()
+    const result = new TextBuilder()
       .appendText(classHeadingText)
       .appendElements(ctorElements)
       .appendElements(pubProp)

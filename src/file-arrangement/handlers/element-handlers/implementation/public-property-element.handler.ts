@@ -1,6 +1,7 @@
 import { ElementHandlerBase } from '..';
-import { FunctionElementHandler, FunctionHelper } from '../../handlers';
-import { ElementBase, ElementCollection } from '../../elements';
+import { FunctionElementHandler } from '../..';
+import { FunctionHelper } from '../../../helpers';
+import { Element, ElementCollection } from '../../../models';
 
 export class PublicPropertyElementHandler extends ElementHandlerBase {
   public get handledElementName(): string {
@@ -13,7 +14,7 @@ export class PublicPropertyElementHandler extends ElementHandlerBase {
     return new ElementCollection(1, this.handledElementName, propertyElements);
   }
 
-  private sortElementsByName(elements: ElementBase[]): ElementBase[] {
+  private sortElementsByName(elements: Element[]): Element[] {
     const result = elements.sort((a, b) => {
       if (a.text < b.text) {
         return .1;
@@ -29,16 +30,16 @@ export class PublicPropertyElementHandler extends ElementHandlerBase {
     return result;
   }
 
-  private setSequence(elements: ElementBase[], offset: number): void {
+  private setSequence(elements: Element[], offset: number): void {
     for (let i = 0; i < elements.length; i++) {
       elements[i].sequence = i + 2 + offset;
     }
   }
 
-  private geSortedPropertyElements(text: string): ElementBase[] {
+  private geSortedPropertyElements(text: string): Element[] {
     const functionElementHandler = new FunctionElementHandler(text);
-    let getElements = functionElementHandler.getFunctionElements('public get ', ElementBase);
-    let setElements = functionElementHandler.getFunctionElements('public set ', ElementBase);
+    let getElements = functionElementHandler.getFunctionElements('public get ', Element);
+    let setElements = functionElementHandler.getFunctionElements('public set ', Element);
 
     getElements = this.sortElementsByName(getElements);
     setElements = this.sortElementsByName(setElements);
@@ -50,7 +51,7 @@ export class PublicPropertyElementHandler extends ElementHandlerBase {
     return concatedElements;
   }
 
-  private sortbySequence(elements: ElementBase[]): ElementBase[] {
+  private sortbySequence(elements: Element[]): Element[] {
     const result = elements.sort((a, b) => {
       if (a.sequence < b.sequence) {
         return -1;
@@ -66,7 +67,7 @@ export class PublicPropertyElementHandler extends ElementHandlerBase {
     return result;
   }
 
-  private setSequences(getElements: ElementBase[], setElements: ElementBase[]): void {
+  private setSequences(getElements: Element[], setElements: Element[]): void {
     let sequence = 0;
     getElements.forEach(f => {
       f.sequence = sequence++;
@@ -85,7 +86,7 @@ export class PublicPropertyElementHandler extends ElementHandlerBase {
     });
   }
 
-  private getCorrespondingSetElement(element: ElementBase, elements: ElementBase[]): ElementBase | null {
+  private getCorrespondingSetElement(element: Element, elements: Element[]): Element | null {
     const propertyName = FunctionHelper.getFunctionNameWithoutParameters(element.text);
     const propertyNameToSearch = propertyName.replace(' get ', ' set ');
 

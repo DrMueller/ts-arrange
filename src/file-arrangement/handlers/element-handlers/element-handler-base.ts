@@ -1,4 +1,4 @@
-import { ElementBase, ElementCollection } from '../elements';
+import { ElementCollection } from '../../models';
 
 export abstract class ElementHandlerBase {
   public abstract get handledElementName(): string;

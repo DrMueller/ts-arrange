@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
-export class TextEditorHandler {
-  public getTextInCurrentlEditorWindow(): string | null {
+export class TextEditorHelper {
+  public static getDocumentText(): string | null {
     const textEditor = vscode.window.activeTextEditor;
     if (!textEditor) {
       return null;
@@ -11,7 +11,7 @@ export class TextEditorHandler {
     return result;
   }
 
-  public setDocumentText(documentText: string): void {
+  public static overwriteDocumentText(documentText: string): void {
     const textEditor = vscode.window.activeTextEditor;
     if (!textEditor) {
       return null;

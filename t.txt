@@ -18,7 +18,6 @@ export class EmployeeWorkMonthCalculationService {
   private readonly defaultWorkDay = 8.5;
 
   public set abc(str: string) {
-
   }
 
   public get handledElementName(): string {

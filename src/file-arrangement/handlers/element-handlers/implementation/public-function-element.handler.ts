@@ -1,6 +1,7 @@
 import { ElementHandlerBase } from '..';
-import { FunctionElementHandler, FunctionHelper } from '../../handlers';
-import { ElementBase, PublicFunctionElement, ElementCollection } from '../../elements';
+import { FunctionElementHandler } from '../..';
+import { FunctionHelper } from '../../../helpers';
+import { Element, ElementCollection } from '../../../models';
 
 export class PublicFunctionElementHandler extends ElementHandlerBase {
   public get handledElementName(): string {
@@ -9,7 +10,7 @@ export class PublicFunctionElementHandler extends ElementHandlerBase {
 
   public getElements(text: string): ElementCollection {
     const functionElementHandler = new FunctionElementHandler(text);
-    let elements = functionElementHandler.getFunctionElements('public', ElementBase);
+    let elements = functionElementHandler.getFunctionElements('public', Element);
 
     // Remove properties
     elements = elements.filter(f => {

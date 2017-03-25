@@ -1,5 +1,5 @@
-import { Constants } from '../infrastucture';
-import { ElementBase, ElementCollection } from '../elements';
+import { Constants } from '../infrastructure';
+import { ElementCollection } from '../models';
 
 export class TextBuilder {
   private text: string;

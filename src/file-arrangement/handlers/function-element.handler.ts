@@ -1,15 +1,13 @@
-import { Constants } from '../infrastucture';
-import { IStringConstructor } from '../../../interfaces';
-
-import { ElementBase, ConstructorElement } from '../elements';
-
+import { Element, ElementCollection } from '../models';
+import { Constants } from '../infrastructure';
+import { IStringConstructor } from '../interfaces';
 
 export class FunctionElementHandler {
   constructor(private documentText: string) {
   }
 
-  public getFunctionElements(searchString: string, ctor: IStringConstructor<ElementBase>): ElementBase[] {
-    const result = new Array<ElementBase>();
+  public getFunctionElements(searchString: string, ctor: IStringConstructor<Element>): Element[] {
+    const result = new Array<Element>();
     let pos = this.documentText.indexOf(searchString, 0);
 
     while (pos > -1) {
@@ -21,7 +19,7 @@ export class FunctionElementHandler {
     return result;
   }
 
-  private createFunctionElement(positon: number, ctor: IStringConstructor<ElementBase>): ElementBase {
+  private createFunctionElement(positon: number, ctor: IStringConstructor<Element>): Element {
     let posWithEmptyChars = positon;
 
     while (true) {

@@ -1,6 +1,7 @@
 import { ElementHandlerBase } from '..';
-import { FunctionElementHandler } from '../../handlers';
-import { ElementBase, ConstructorElement, ElementCollection } from '../../elements';
+import { FunctionElementHandler } from '../..';
+import { FunctionHelper } from '../../../helpers';
+import { Element, ElementCollection } from '../../../models';
 
 export class ConstructorElementHandler extends ElementHandlerBase {
   public get handledElementName(): string {
@@ -9,7 +10,7 @@ export class ConstructorElementHandler extends ElementHandlerBase {
 
   public getElements(text: string): ElementCollection {
     const functionElementHandler = new FunctionElementHandler(text);
-    const elements = functionElementHandler.getFunctionElements('constructor', ElementBase);
+    const elements = functionElementHandler.getFunctionElements('constructor', Element);
 
     return new ElementCollection(1, this.handledElementName, elements);
   }
