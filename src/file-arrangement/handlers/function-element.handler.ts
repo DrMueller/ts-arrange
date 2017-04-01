@@ -1,4 +1,4 @@
-import { Element, ElementCollection } from '../models';
+import { Element, ElementCollection } from '../models/elements';
 import { Constants } from '../infrastructure';
 import { IStringConstructor } from '../interfaces';
 import { StringHelper } from '../helpers';
@@ -8,13 +8,17 @@ export class FunctionElementHandler {
   constructor(private documentText: string) {
   }
 
-  public getFunctionElementsWithExclusions(searchString: string, ctor: IStringConstructor<Element>, excludedStrings: string[]): Element[] {
+  public getFunctionElements(
+    searchString: string,
+    ctor: IStringConstructor<Element>,
+    excludedStrings: string[] | null = null): Element[] {
+
     const result = new Array<Element>();
-    let pos = StringHelper.indexOfCaseInsensitive(this.documentText, searchString, 0);
+    let pos = this.getNextFunctionPosition(searchString, 0);
     while (pos > -1) {
       const element = this.createFunctionElement(pos, ctor);
 
-      if (!this.checkIfElementHeadingContainsString(element, excludedStrings)) {
+      if (excludedStrings === null || !ElementHeadingHandler.CheckIfElementHeadingContainsString(element, excludedStrings)) {
         result.push(element);
       }
 
@@ -25,27 +29,26 @@ export class FunctionElementHandler {
     return result;
   }
 
-  private checkIfElementHeadingContainsString(element: Element, strings: string[]): boolean {
-    const heading = ElementHeadingHandler.getHeadingWithoutParameters(element);
-    const result = strings.some(f => {
-      return StringHelper.indexOfCaseInsensitive(heading, f, 0) > -1;
-    });
+  private getNextFunctionPosition(searchString: string, position: number): number {
+    while (true) {
+      position = StringHelper.indexOfCaseInsensitive(this.documentText, searchString, position);
+      if (position === -1) {
+        return -1;
+      }
 
-    return result;
-  }
+      const functionString = this.getFunctionString(position);
 
-  public getFunctionElements(searchString: string, ctor: IStringConstructor<Element>): Element[] {
-    const result = new Array<Element>();
-    let pos = StringHelper.indexOfCaseInsensitive(this.documentText, searchString, 0);
-
-    while (pos > -1) {
-      const functionElement = this.createFunctionElement(pos, ctor);
-      result.push(functionElement);
-      const posAfterText = pos + functionElement.text.length;
-      pos = StringHelper.indexOfCaseInsensitive(this.documentText, searchString, posAfterText);
+      // If the character before the ( is a ; its a field
+      // properties get filtered out on the later stage in order to not offset the position
+      for (let i = 0; i < functionString.length; i++) {
+        const char = functionString.charAt(i);
+        if (char === ';') {
+          return position + i;
+        } else if (char === '(') {
+          return position;
+        }
+      }
     }
-
-    return result;
   }
 
   private createFunctionElement(positon: number, ctor: IStringConstructor<Element>): Element {

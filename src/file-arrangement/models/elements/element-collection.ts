@@ -1,6 +1,6 @@
 import { Element } from '.';
 import { ElementSortingType } from './enums';
-import { ElementSortingStrategyFactory } from '../handlers/sorting-handlers';
+import { ElementSortingStrategyFactory } from '../../handlers/sorting-handlers';
 
 export class ElementCollection extends Array<Element> {
   constructor(public sequence: number, public name: string, elements: Element[]) {

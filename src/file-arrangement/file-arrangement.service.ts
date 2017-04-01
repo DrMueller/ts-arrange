@@ -1,48 +1,43 @@
-import { Element, ElementCollection } from './models';
+import { Element, ElementCollection } from './models/elements';
+import { ConfigurationCollection } from './models/configuration';
 import { Constants } from './infrastructure';
-
 import { TextBuilder } from './handlers';
-import {
-  ConstructorElementHandler,
-  PublicFunctionElementHandler,
-  PublicPropertyElementHandler,
-  PublicFieldElementHandler,
-  PrivateFieldElementHandler
-} from './handlers/element-handlers';
-
-import * as _ from 'lodash';
+import { IElementHandler, ElementHandlerFactory } from './handlers/element-handlers';
+import { ConfigHandler } from './handlers/config-handlers';
 
 export class FileArrangementService {
+
   public arrangeWithinClass(text: string): string {
     const classHeadingText = this.getClassHeading(text);
 
-    const tra = new ConstructorElementHandler();
-    const ctorElements = tra.getElements(text);
+    const textBuilder = new TextBuilder()
+      .appendText(classHeadingText);
 
-    const tra2 = new PublicFunctionElementHandler();
-    const pubFuncElements = tra2.getElements(text);
+    this.appendElements(text, textBuilder);
 
-    const tra3 = new PublicPropertyElementHandler();
-    const pubProp = tra3.getElements(text);
-
-    const tra4 = new PublicFieldElementHandler();
-    const pubFields = tra4.getElements(text);
-
-    const tra5 = new PrivateFieldElementHandler();
-    const privFields = tra5.getElements(text);
-
-    const result = new TextBuilder()
-      .appendText(classHeadingText)
-      .appendElements(privFields, false)
-      .appendElements(ctorElements, true)
-      .appendElements(pubFuncElements, true)
-      .appendElements(pubProp, true)
-      .appendElements(pubFields, false)
-      .appendText(Constants.CLOSING_BRACKET)
+    const result = textBuilder.appendText(Constants.CLOSING_BRACKET)
       .appendEmptyLine()
       .build();
 
     return result;
+  }
+
+  private appendElements(text: string, textBuilder: TextBuilder): void {
+    const configEntries = ConfigHandler.readConfigurationCollection();
+    configEntries.sortBySequence();
+
+    configEntries.elements.forEach(configEntry => {
+      const elementHandler = ElementHandlerFactory.createByConfigEntry(configEntry);
+      const elementEntries = elementHandler.getElements(text);
+
+      if (elementEntries.length > 0) {
+        textBuilder.appendElements(elementEntries, configEntry.emptyLineBetween);
+
+        if (configEntries.elements.indexOf(configEntry) < (configEntries.elements.length - 1)) {
+          textBuilder.appendEmptyLine();
+        }
+      }
+    });
   }
 
   private getClassHeading(str: string): string {

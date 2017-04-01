@@ -1,5 +1,5 @@
 import { IElementSortingStrategy } from '..';
-import { Element } from '../../../models';
+import { Element } from '../../../models/elements';
 
 export class SortBySequence implements IElementSortingStrategy {
   sort(a: Element, b: Element): number {
@@ -13,4 +13,4 @@ export class SortBySequence implements IElementSortingStrategy {
 
     return 0;
   }
-} 
+}

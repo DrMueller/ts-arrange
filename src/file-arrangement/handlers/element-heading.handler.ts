@@ -1,8 +1,9 @@
-import { Element } from '../models';
+import { Element } from '../models/elements';
+import { StringHelper } from './../helpers';
 import * as _ from 'lodash';
 
 export class ElementHeadingHandler {
-  public static getHeadingWithoutParameters(element: Element): string {
+  public static GetHeadingWithoutParameters(element: Element): string {
     let result = '';
     const trimmedHeading = _.trimStart(element.text);
 
@@ -14,6 +15,15 @@ export class ElementHeadingHandler {
         break;
       }
     }
+
+    return result;
+  }
+
+  public static CheckIfElementHeadingContainsString(element: Element, strings: string[]): boolean {
+    const heading = ElementHeadingHandler.GetHeadingWithoutParameters(element);
+    const result = strings.some(f => {
+      return StringHelper.indexOfCaseInsensitive(heading, f, 0) > -1;
+    });
 
     return result;
   }

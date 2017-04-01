@@ -1,0 +1,17 @@
+{
+  "file-sorting": [
+    "Public Readonly Field",
+    "Internal Readonly Field",
+    "Protected Readonly Field",
+    "Private Readonly Field",
+    "Public Field",
+    "Internal Field",
+    "Protected Field",
+    "Private Field",
+    "Constructor",
+    "Public Function",
+    "Internal Function",
+    "Protected Function",
+    "Private Function"
+  ]
+}

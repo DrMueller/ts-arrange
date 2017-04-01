@@ -1,4 +1,4 @@
-import { ElementSortingType } from '../../models';
+import { ElementSortingType } from '../../models/elements';
 import { IElementSortingStrategy } from '.';
 import { SortByHeading, SortBySequence } from './implementation';
 

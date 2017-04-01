@@ -1,11 +1,11 @@
 import { IElementSortingStrategy } from '..';
-import { Element } from '../../../models';
+import { Element } from '../../../models/elements';
 import { ElementHeadingHandler } from '../..';
 
 export class SortByHeading implements IElementSortingStrategy {
   public sort(a: Element, b: Element): number {
-    const headingFirst = ElementHeadingHandler.getHeadingWithoutParameters(a);
-    const headingSecond = ElementHeadingHandler.getHeadingWithoutParameters(b);
+    const headingFirst = ElementHeadingHandler.GetHeadingWithoutParameters(a);
+    const headingSecond = ElementHeadingHandler.GetHeadingWithoutParameters(b);
 
     if (headingFirst < headingSecond) {
       return -1;

@@ -1,33 +1,38 @@
-import { Element, ElementCollection, ElementModifier } from '../models';
+import { Element, ElementCollection, ElementModifier } from '../models/elements';
 import { Constants } from '../infrastructure';
 import { IStringConstructor } from '../interfaces';
 import { StringHelper } from '../helpers';
 import { ElementHeadingHandler } from '.';
 
-
 export class FieldElementHandler {
   constructor(private documentText: string) {
   }
 
-  public getFieldElements(modifier: ElementModifier, ctor: IStringConstructor<Element>): Element[] {
+  public getFieldElements(
+    searchString: string,
+    ctor: IStringConstructor<Element>,
+    excludedStrings: string[] | null = null): Element[] {
     const result = new Array<Element>();
-    const modifierString = ElementModifier[modifier];
 
-    let pos = this.getNextFieldPosition(modifierString, 0);
+    let pos = this.getNextFieldPosition(searchString, 0);
 
     while (pos > -1) {
       const functionElement = this.createFieldElement(pos, ctor);
-      result.push(functionElement);
+
+      if (excludedStrings === null || !ElementHeadingHandler.CheckIfElementHeadingContainsString(functionElement, excludedStrings)) {
+        result.push(functionElement);
+      }
+
       const posAfterText = pos + functionElement.text.length;
-      pos = this.getNextFieldPosition(modifierString, posAfterText);
+      pos = this.getNextFieldPosition(searchString, posAfterText);
     }
 
     return result;
   }
 
-  private getNextFieldPosition(modifierString: string, position: number): number {
+  private getNextFieldPosition(searchString: string, position: number): number {
     while (true) {
-      position = StringHelper.indexOfCaseInsensitive(this.documentText, modifierString, position);
+      position = StringHelper.indexOfCaseInsensitive(this.documentText, searchString, position);
       if (position === -1) {
         return -1;
       }

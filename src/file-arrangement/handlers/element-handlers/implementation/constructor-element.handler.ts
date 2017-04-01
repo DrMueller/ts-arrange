@@ -1,6 +1,6 @@
 import { IElementHandler } from '..';
 import { FunctionElementHandler } from '../..';
-import { Element, ElementCollection } from '../../../models';
+import { Element, ElementCollection } from '../../../models/elements';
 
 export class ConstructorElementHandler implements IElementHandler {
   public get handledElementName(): string {

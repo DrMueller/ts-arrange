@@ -1,6 +1,7 @@
 import { IElementHandler } from '../..';
 import { FunctionElementHandler, ElementHeadingHandler } from '../../..';
-import { Element, ElementCollection, ElementModifier } from '../../../../models';
+import { Element, ElementCollection, ElementModifier, ElementSortingType } from '../../../../models/elements';
+import { ElementSortingStrategyFactory, IElementSortingStrategy } from '../../../sorting-handlers';
 
 export abstract class PropertyElementHandlerBase {
   public get handledElementName(): string {
@@ -15,19 +16,9 @@ export abstract class PropertyElementHandlerBase {
     return new ElementCollection(1, this.handledElementName, propertyElements);
   }
 
-  private sortElementsByName(elements: Element[]): Element[] {
-    const result = elements.sort((a, b) => {
-      if (a.text < b.text) {
-        return .1;
-      }
-
-      if (a.text > b.text) {
-        return 1;
-      }
-
-      return 0;
-    });
-
+  private sortElements(elements: Element[], sortingType: ElementSortingType): Element[] {
+    const sortingStrategy = ElementSortingStrategyFactory.createBySortingType(sortingType);
+    const result = elements.sort(sortingStrategy.sort);
     return result;
   }
 
@@ -39,31 +30,16 @@ export abstract class PropertyElementHandlerBase {
 
   private geSortedPropertyElements(text: string): Element[] {
     const functionElementHandler = new FunctionElementHandler(text);
+
     let getElements = functionElementHandler.getFunctionElements(`${ElementModifier[this.modifier]} get `, Element);
     let setElements = functionElementHandler.getFunctionElements(`${ElementModifier[this.modifier]} set `, Element);
 
-    getElements = this.sortElementsByName(getElements);
-    setElements = this.sortElementsByName(setElements);
+    getElements = this.sortElements(getElements, ElementSortingType.ByHeading);
+    setElements = this.sortElements(setElements, ElementSortingType.ByHeading);
 
     this.setSequences(getElements, setElements);
     const concatedElements = getElements.concat(setElements);
-    const result = this.sortbySequence(concatedElements);
-
-    return result;
-  }
-
-  private sortbySequence(elements: Element[]): Element[] {
-    const result = elements.sort((a, b) => {
-      if (a.sequence < b.sequence) {
-        return -1;
-      }
-
-      if (a.sequence > b.sequence) {
-        return 1;
-      }
-
-      return 0;
-    });
+    const result = this.sortElements(concatedElements, ElementSortingType.BySequence);
 
     return result;
   }
@@ -88,11 +64,11 @@ export abstract class PropertyElementHandlerBase {
   }
 
   private getCorrespondingSetElement(element: Element, elements: Element[]): Element | undefined {
-    const propertyName = ElementHeadingHandler.getHeadingWithoutParameters(element);
+    const propertyName = ElementHeadingHandler.GetHeadingWithoutParameters(element);
     const propertyNameToSearch = propertyName.replace(' get ', ' set ');
 
     const opposingProperty = elements.find(f => {
-      const propName = ElementHeadingHandler.getHeadingWithoutParameters(f);
+      const propName = ElementHeadingHandler.GetHeadingWithoutParameters(f);
       return propName === propertyNameToSearch;
     });
 

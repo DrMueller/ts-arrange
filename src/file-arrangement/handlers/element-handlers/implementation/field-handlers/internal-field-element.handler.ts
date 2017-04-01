@@ -1,7 +1,7 @@
 import { FieldElementHandlerBase } from '.';
-import { ElementModifier } from '../../../../models';
+import { ElementModifier } from '../../../../models/elements';
 
-export class InternalElementFieldHandler extends FieldElementHandlerBase {
+export class InternalFieldElementHandler extends FieldElementHandlerBase {
   constructor() {
     super(ElementModifier.Internal);
   }

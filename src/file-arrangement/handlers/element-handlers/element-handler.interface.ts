@@ -1,4 +1,4 @@
-import { ElementCollection } from '../../models';
+import { ElementCollection } from '../../models/elements';
 
 export interface IElementHandler {
   handledElementName: string; // Getters and setter not possible in Interfaces atm

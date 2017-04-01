@@ -1,6 +1,6 @@
 import { IElementHandler } from '../..';
 import { FunctionElementHandler } from '../../..';
-import { Element, ElementCollection, ElementModifier, ElementSortingType } from '../../../../models';
+import { Element, ElementCollection, ElementModifier, ElementSortingType } from '../../../../models/elements';
 
 export abstract class FunctionElementHandlerBase {
   public get handledElementName(): string {
@@ -15,10 +15,11 @@ export abstract class FunctionElementHandlerBase {
 
     const excludedStrings = [
       'get ',
-      'set '
+      'set ',
+      'constructor'
     ];
 
-    const elements = functionElementHandler.getFunctionElementsWithExclusions(ElementModifier[this.modifier], Element, excludedStrings);
+    const elements = functionElementHandler.getFunctionElements(ElementModifier[this.modifier], Element, excludedStrings);
     const result = new ElementCollection(1, this.handledElementName, elements);
     result.sortByType(ElementSortingType.ByHeading);
 
