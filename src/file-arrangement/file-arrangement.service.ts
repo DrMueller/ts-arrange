@@ -5,6 +5,8 @@ import { TextBuilder } from './handlers';
 import { IElementHandler, ElementHandlerFactory } from './handlers/element-handlers';
 import { ConfigHandler } from './handlers/config-handlers';
 
+import * as vscode from 'vscode';
+
 export class FileArrangementService {
 
   public arrangeWithinClass(text: string): string {
