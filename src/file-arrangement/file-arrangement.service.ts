@@ -1,18 +1,16 @@
-import { Element, ElementCollection } from './models/elements';
-import { ConfigurationCollection } from './models/configuration';
-import { Constants } from './infrastructure';
-import { TextBuilder } from './handlers';
-import { IElementHandler, ElementHandlerFactory } from './handlers/element-handlers';
-import { ConfigHandler } from './handlers/config-handlers';
-
 import * as vscode from 'vscode';
+
+import { Constants } from './infrastructure';
+import { TextBuilderService } from './code-document-handling';
+import { ConfigurationService } from './configuration';
+import { ElementGleaningServiceFactory } from './elements';
 
 export class FileArrangementService {
 
   public arrangeWithinClass(text: string): string {
     const classHeadingText = this.getClassHeading(text);
 
-    const textBuilder = new TextBuilder()
+    const textBuilder = new TextBuilderService()
       .appendText(classHeadingText);
 
     this.appendElements(text, textBuilder);
@@ -24,12 +22,12 @@ export class FileArrangementService {
     return result;
   }
 
-  private appendElements(text: string, textBuilder: TextBuilder): void {
-    const configEntries = ConfigHandler.readConfigurationCollection();
+  private appendElements(text: string, textBuilder: TextBuilderService): void {
+    const configEntries = ConfigurationService.readConfigurationCollection();
     configEntries.sortBySequence();
 
     configEntries.elements.forEach(configEntry => {
-      const elementHandler = ElementHandlerFactory.createByConfigEntry(configEntry);
+      const elementHandler = ElementGleaningServiceFactory.createByConfigEntry(configEntry);
       const elementEntries = elementHandler.getElements(text);
 
       if (elementEntries.length > 0) {

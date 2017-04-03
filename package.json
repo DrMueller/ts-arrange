@@ -2,7 +2,7 @@
     "name": "ts-arrange",
     "displayName": "ts-arrange",
     "description": "TypeScript code anrrangement by static text-analysis",
-    "version": "0.7.0",
+    "version": "0.8.0",
     "publisher": "DrMueller",
     "engines": {
         "vscode": "^1.10.0"
@@ -37,5 +37,6 @@
         "mocha": "^2.3.3",
         "@types/node": "^6.0.40",
         "@types/mocha": "^2.2.32"
-    }
+    },
+    "icon": "assets/T.PNG"
 }
