@@ -1,11 +1,28 @@
-# ts-arrange README
+# TS-Arrange
+Simple reordering of TypeScript File-Elements like Properties, Fields, Functions etc.
 
-## Features
+## Installation
+In the command palette (cmd-shift-p) select Install Extension and search for  __ts-arrange__.
 
-## Requirements
+## Usage
+### Arrange File
+1. Make sure the arrangement is configured
+2. Navigate to the desired TypeScript Class
+3. On the command palette (cmd-shift-p), select _Arrange File_
+4. Profit
 
-## Extension Settings
+## Configuration
+### Definition
+1. Navigate to your Workspace Config (File -> Preferences -> Settings)
+2. Add blocks to the top-element with the following attributes:   
+     * Element-name: Internal Identifier of the Element-Block
+     * Sequence: Sorting-Order of the Element
+     * Empty-Line-Between: Defines, if a Line should be added for each Element within the same group
 
+**NOTE**: Do always set all Element-Blocks, otherwise the not found Types will get deleted!
+
+### Example
+```javascript
  "tsarrange": {
     "file-sorting": [
       {
@@ -94,11 +111,12 @@
         "empty-line-between": true
       }
     ]
+  }
+  ```
 
-## Known Issues
+## Change-Log
+###  0.13.0
+- Very initial
 
-## Release Notes
-
-### 1.0.0
-
-Initial release of TS-Arrange
+## License
+This software is released under [MIT License](http://www.opensource.org/licenses/mit-license.php)

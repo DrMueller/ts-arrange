@@ -29,10 +29,6 @@ export class FileArrangementService {
     configEntries.elements.forEach(configEntry => {
       console.log(configEntry.elementName);
 
-      if (configEntry.elementName === 'Private Function') {
-        console.log('t');
-      }
-
       const elementHandler = ElementGleaningServiceFactory.createByConfigEntry(configEntry);
       const elementEntries = elementHandler.getElements(text);
 
