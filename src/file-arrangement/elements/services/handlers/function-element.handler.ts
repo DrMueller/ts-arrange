@@ -1,5 +1,5 @@
 import { Constants } from '../../../infrastructure';
-import { Element, ElementCollection } from '../../models';
+import { Element, ElementCollection, FunctionValidationResult } from '../../models';
 import { StringHelper } from '../../helpers';
 import { IStringConstructor } from '../../interfaces';
 import { ElementHeadingHandler } from '.';
@@ -14,39 +14,53 @@ export class FunctionElementHandler {
     excludedStrings: string[] | null = null): Element[] {
 
     const result = new Array<Element>();
-    let pos = this.getNextFunctionPosition(searchString, 0);
-    while (pos > -1) {
-      const element = this.createFunctionElement(pos, ctor);
+    let position = 0;
 
-      if (excludedStrings === null || !ElementHeadingHandler.CheckIfElementHeadingContainsString(element, excludedStrings)) {
-        result.push(element);
+    do {
+      position = StringHelper.indexOfCaseInsensitive(this.documentText, searchString, position);
+      if (position > -1) {
+        position = this.appendNextFunctionElement(position, ctor, result, excludedStrings);
       }
-
-      const posAfterText = pos + element.text.length;
-      pos = StringHelper.indexOfCaseInsensitive(this.documentText, searchString, posAfterText);
-    }
+    } while (position > -1);
 
     return result;
   }
 
-  private getNextFunctionPosition(searchString: string, position: number): number {
-    while (true) {
-      position = StringHelper.indexOfCaseInsensitive(this.documentText, searchString, position);
-      if (position === -1) {
-        return -1;
-      }
+  private appendNextFunctionElement(
+    position: number,
+    ctor: IStringConstructor<Element>,
+    elements: Array<Element>,
+    excludedStrings: string[] | null = null): number {
 
-      const functionString = this.getFunctionString(position);
+    const functionString = this.getFunctionString(position);
+    const checkResult = this.checkIfIsValidFunction(functionString);
 
-      for (let i = 0; i < functionString.length; i++) {
-        const char = functionString.charAt(i);
-        if (char === ';') {
-          return position + i;
-        } else if (char === '(') {
-          return position;
-        }
+    if (!checkResult.isValid) {
+      return position + checkResult.nextPosition;
+    }
+
+    const element = this.createFunctionElement(position, ctor);
+
+    if (excludedStrings === null || !ElementHeadingHandler.CheckIfElementHeadingContainsString(element, excludedStrings)) {
+      elements.push(element);
+    }
+
+    return position + element.text.length;
+  }
+
+  private checkIfIsValidFunction(functionString: string): FunctionValidationResult {
+    for (let i = 0; i < functionString.length; i++) {
+      const char = functionString.charAt(i);
+      if (char === Constants.SEMICOLON) { // field
+        return new FunctionValidationResult(false, i);
+      } else if (char === Constants.CLOSING_ROUND_BRACKED) { // Parameter-Property
+        return new FunctionValidationResult(false, i);
+      } else if (char === Constants.OPENING_ROUND_BRACKED) { // actual function
+        return new FunctionValidationResult(true, 0);
       }
     }
+
+    return new FunctionValidationResult(false, functionString.length);
   }
 
   private createFunctionElement(positon: number, ctor: IStringConstructor<Element>): Element {
@@ -75,13 +89,13 @@ export class FunctionElementHandler {
     for (let i = 0; i < str.length; i++) {
       const char = str.charAt(i);
       result += char;
-      if (char === Constants.CLOSING_BRACKET) {
+      if (char === Constants.CLOSING_SQUARE_BRACKET) {
         openingBracketsCount--;
         if (openingBracketsCount === 0) {
           break;
         }
       } else {
-        if (char === Constants.OPENING_BRACKET) {
+        if (char === Constants.OPENING_SQUARE_BRACKET) {
           openingBracketsCount++;
         }
       }

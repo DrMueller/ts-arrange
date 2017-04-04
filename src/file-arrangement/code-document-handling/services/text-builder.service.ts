@@ -28,6 +28,8 @@ export class TextBuilderService {
 
   public build(): string {
     let result = this.text;
+
+    // For some reason, we get an 'undefined' on the beginning (Charset missmatch?)
     if (result.startsWith('undefined')) {
       result = result.substring(9);
     }

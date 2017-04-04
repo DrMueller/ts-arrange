@@ -5,8 +5,12 @@ import { FileArrangementModule } from './file-arrangement';
 export class CommandRegistrator {
   public registerAllCommands(context: vscode.ExtensionContext): void {
     const arrangeFileCommand = vscode.commands.registerCommand('extension.arrangeFile', () => {
-      const fileArranger = new FileArrangementModule();
-      fileArranger.arrangeWithinFile();
+      try {
+        const fileArranger = new FileArrangementModule();
+        fileArranger.arrangeWithinFile();
+      } catch (err) {
+        vscode.window.showErrorMessage(err.message);
+      }
     });
 
     context.subscriptions.push(arrangeFileCommand);

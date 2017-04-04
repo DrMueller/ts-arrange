@@ -15,7 +15,7 @@ export class FileArrangementService {
 
     this.appendElements(text, textBuilder);
 
-    const result = textBuilder.appendText(Constants.CLOSING_BRACKET)
+    const result = textBuilder.appendText(Constants.CLOSING_SQUARE_BRACKET)
       .appendEmptyLine()
       .build();
 
@@ -27,6 +27,12 @@ export class FileArrangementService {
     configEntries.sortBySequence();
 
     configEntries.elements.forEach(configEntry => {
+      console.log(configEntry.elementName);
+
+      if (configEntry.elementName === 'Private Function') {
+        console.log('t');
+      }
+
       const elementHandler = ElementGleaningServiceFactory.createByConfigEntry(configEntry);
       const elementEntries = elementHandler.getElements(text);
 
@@ -48,7 +54,7 @@ export class FileArrangementService {
     while (true) {
       const char = str.charAt(i);
       elementString += char;
-      if (char === Constants.OPENING_BRACKET) {
+      if (char === Constants.OPENING_SQUARE_BRACKET) {
         break;
       }
 

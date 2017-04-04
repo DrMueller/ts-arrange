@@ -17,9 +17,14 @@ export class CodeDocumentService {
       return;
     }
 
+    const textEditOptions = {
+      undoStopBefore: true,
+      undoStopAfter: true
+    };
+
     textEditor.edit(f => {
       f.delete(new vscode.Range(0, 0, textEditor.document.lineCount, textEditor.document.getText().length));
-    }).then(f => {
+    }, textEditOptions).then(f => {
       textEditor.edit(t => {
         t.insert(new vscode.Position(0, 0), documentText);
       });
