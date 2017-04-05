@@ -2,7 +2,7 @@
     "name": "ts-arrange",
     "displayName": "ts-arrange",
     "description": "TypeScript code anrrangement by static text-analysis",
-    "version": "0.13.0",
+    "version": "0.15.0",
     "publisher": "DrMueller",
     "engines": {
         "vscode": "^1.10.0"
@@ -10,11 +10,16 @@
     "files.associations": {
         "*.ts": "ts"
     },
+    "homepage": "https://github.com/DrMueller/ts-arrange",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DrMueller/ts-arrange.git"
+    },
     "categories": [
         "Formatters"
     ],
     "activationEvents": [
-        "onCommand:extension.arrangeFile"
+        "*"
     ],
     "main": "./out/src/extension",
     "contributes": {
