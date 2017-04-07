@@ -13,7 +13,7 @@ export class TextBuilderService {
     for (let i = 0; i < elements.length; i++) {
       this.text += elements[i].text;
 
-      if (i < elements.length && emptyLineBetween) {
+      if (i < (elements.length - 1) && emptyLineBetween) {
         this.text += Constants.NEW_LINE;
       }
     }
@@ -27,7 +27,7 @@ export class TextBuilderService {
   }
 
   public build(): string {
-    let result = this.text;
+    let result = this.text || '';
 
     // For some reason, we get an 'undefined' on the beginning (Charset missmatch?)
     if (result.startsWith('undefined')) {

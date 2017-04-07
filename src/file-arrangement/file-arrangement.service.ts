@@ -27,8 +27,6 @@ export class FileArrangementService {
     configEntries.sortBySequence();
 
     configEntries.elements.forEach(configEntry => {
-      console.log(configEntry.elementName);
-
       const elementHandler = ElementGleaningServiceFactory.createByConfigEntry(configEntry);
       const elementEntries = elementHandler.getElements(text);
 
