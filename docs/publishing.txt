@@ -2,5 +2,4 @@
 
 vsce publish minor
 
-
 major, minor, or patch.
